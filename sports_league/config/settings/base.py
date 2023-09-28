@@ -48,10 +48,7 @@ LOCALE_PATHS = [str(BASE_DIR / "locale")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
-    "default": env.db(
-        "DATABASE_URL",
-        default="sqlite:///sports_league/sports_league.db"
-    ),
+    "default": env.db("DATABASE_URL", default="sqlite:///sports_league/sports_league.db"),
 }
 
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
@@ -231,7 +228,12 @@ EMAIL_TIMEOUT = 5
 # Django Admin URL.
 ADMIN_URL = "admin/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
-ADMINS = [("""the sports league and displays the ranking table based on the uploaded data.Manar Layka""", "manar.layka@gmail.com")]
+ADMINS = [
+    (
+        """the sports league and displays the ranking table based on the uploaded data.Manar Layka""",
+        "manar.layka@gmail.com",
+    )
+]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 # https://cookiecutter-django.readthedocs.io/en/latest/settings.html#other-environment-settings

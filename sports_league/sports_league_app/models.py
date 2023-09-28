@@ -1,7 +1,9 @@
 from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
+
 from sports_league_app.strategy import DefaultPointsCalculation
+
 # Create your models here.
 
 
@@ -28,9 +30,9 @@ class Team(models.Model):
 
 
 class Game(models.Model):
-    first_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='first_team_results')
+    first_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="first_team_results")
     first_team_score = models.PositiveIntegerField()
-    second_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='second_team_results')
+    second_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="second_team_results")
     second_team_score = models.PositiveIntegerField()
 
     def __str__(self):
@@ -64,7 +66,7 @@ class Game(models.Model):
         return self.first_team
 
     def delete(self, *args, **kwargs):
-        points_strategy = kwargs.pop('points_strategy', None)
+        points_strategy = kwargs.pop("points_strategy", None)
         if points_strategy is None:
             points_strategy = DefaultPointsCalculation()
         points_strategy.update_teams(self, delete=True)
@@ -73,7 +75,7 @@ class Game(models.Model):
     def save(self, *args, **kwargs):
         created = not self.pk
         super(Game, self).save(*args, **kwargs)
-        points_strategy = kwargs.pop('points_strategy', None)
+        points_strategy = kwargs.pop("points_strategy", None)
         if points_strategy is None:
             points_strategy = DefaultPointsCalculation()
         if created:

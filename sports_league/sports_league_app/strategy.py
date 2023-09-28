@@ -46,13 +46,13 @@ class DefaultPointsCalculation(PointsCalculationStrategy):
 class AlternativePointsCalculation(PointsCalculationStrategy):
     def calculate_points(self, team):
         """
-           Implement an alternative points calculation method here
-           Example: return team.wins * 2 + team.draws * 1 + team.loses * 0
+        Implement an alternative points calculation method here
+        Example: return team.wins * 2 + team.draws * 1 + team.loses * 0
         """
         pass
 
     def update_teams(self, game, delete=False):
         """
-            Implement a way to calculate team wins, draws and loses and update teams depending on it
+        Implement a way to calculate team wins, draws and loses and update teams depending on it
         """
         pass

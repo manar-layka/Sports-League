@@ -11,14 +11,16 @@ class UserFactory(DjangoModelFactory):
     email = Faker("email")
     name = Faker("name")
 
-    password = LazyAttribute(lambda x: Faker(
-        "password",
-        length=42,
-        special_chars=True,
-        digits=True,
-        upper_case=True,
-        lower_case=True,
-    ).evaluate(None, None, extra={"locale": None}))
+    password = LazyAttribute(
+        lambda x: Faker(
+            "password",
+            length=42,
+            special_chars=True,
+            digits=True,
+            upper_case=True,
+            lower_case=True,
+        ).evaluate(None, None, extra={"locale": None})
+    )
 
     @classmethod
     def _after_postgeneration(cls, instance, create, results=None):

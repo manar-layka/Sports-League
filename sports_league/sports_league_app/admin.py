@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Team, Game
+
+from .models import Game, Team
+
 # Register your models here.
 
 
