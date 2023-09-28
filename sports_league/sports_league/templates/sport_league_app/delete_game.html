@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Delete Game</h1>
+<p>Are you sure you want to delete the game between {{ game.first_team.name }} and {{ game.second_team.name }}?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Delete</button>
+    <a href="{% url 'sports_league_app:games_list' %}">Cancel</a>
+</form>
+{% endblock %}
+

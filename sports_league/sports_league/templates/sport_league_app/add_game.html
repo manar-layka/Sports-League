@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<body>
+    <h1>Add Game</h1>
+    <form class=".editing-buttons" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Game</button>
+    </form>
+    <a href="{% url 'sports_league_app:upload_csv' %}">Back to Ranking Table</a>
+</body>
+{% endblock %}

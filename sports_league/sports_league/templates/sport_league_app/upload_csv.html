@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block content %}
+<body>
+    <h1>Ranking Table</h1>
+
+    {% if error_message %}
+    <div class="alert alert-danger">
+        {{ error_message }}
+    </div>
+    {% endif %}
+    <p>Upload CSV File Here:</p>
+    <form id="csv-upload-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="csv_file" accept=".csv" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <div class="ranking-table" id="ranking-table">
+        <h2>Ranking Table</h2>
+        <table>
+            <thead>
+            {% if ranking %}
+                <tr>
+                    <th>Rank</th>
+                    <th>Team</th>
+                    <th>Points</th>
+                </tr>
+            {% endif %}
+            </thead>
+            <tbody>
+            {% if ranking %}
+                {% for team in ranking %}
+                <tr data-team-id="{{ team.id }}">
+                    <td>{{ team.rank }}</td>
+                    <td>{{ team.name }}</td>
+                    <td>{{ team.points }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+            <p>No ranking data available.</p>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="buttons">
+        OR
+        <button id="add-game-button" onclick="location.href='{% url 'sports_league_app:add_game' %}'">Add Game</button>
+        <button id="edit-game-btn" onclick="location.href='{% url 'sports_league_app:games_list' %}'">Edit Games</button>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+      $('.ranking-table tbody').empty();
+        function updateRankingTable() {
+            $.ajax({
+                url: '{% url "sports_league_app:upload_csv" %}',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                  if (data && data.ranking_data) {
+                    var rankingTable = $('#ranking-table tbody');
+                    rankingTable.empty();
+
+
+                    $.each(data.ranking, function (index, team) {
+                      rankingTable.append('<tr data-team-id="${team.id}">' +
+                        '<td>' + team.rank + '</td>' +
+                        '<td>' + team.name + '</td>' +
+                        '<td>' + team.points + '</td>' +
+                        '</tr>');
+                    });
+                  }
+                },
+                error: function() {
+                    console.error('Error fetching ranking data.');
+                }
+            });
+        }
+        $(document).ready(function() {
+        $('.ranking-table tbody').empty();
+        });
+
+        $('#csv-upload-form').on('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: '{% url "sports_league_app:upload_csv" %}',
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    updateRankingTable();
+                },
+                error: function() {
+                    console.error('Error uploading CSV file.');
+                }
+            });
+        });
+        updateRankingTable();
+    });
+    </script>
+
+</body>
+{% endblock %}

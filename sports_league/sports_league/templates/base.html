@@ -1,0 +1,149 @@
+
+{% load static i18n %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>
+      {% block title %}
+      Sports League
+    {% endblock title %}
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+        content="Django web application that allows the user to upload a CSV file containing the results of games in" />
+  <meta name="author"
+        content="the sports league and displays the ranking table based on the uploaded data.Manar Layka" />
+  <link rel="icon" href="{% static 'images/favicons/sports-league.png' %}" />
+  {% block css %}
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
+          integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+<!-- Your stuff: Third-party CSS libraries go here -->
+<!-- This file stores project-specific CSS -->
+
+
+  <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+
+
+{% endblock css %}
+<!-- Le javascript
+    ================================================== -->
+{# Placed at the top of the document so pages load faster with defer #}
+{% block javascript %}
+
+
+<!-- Bootstrap JS -->
+<script defer
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"
+        integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
+<!-- Your stuff: Third-party javascript libraries go here -->
+
+
+<!-- place project specific Javascript in this file -->
+
+
+  <script defer src="{% static 'js/project.js' %}"></script>
+
+
+{% endblock javascript %}
+</head>
+<body>
+  <div class="mb-1">
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+      <div class="container-fluid">
+        <button class="navbar-toggler navbar-toggler-right"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="{% url 'sports_league_app:upload_csv' %}">Sports League</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'sports_league_app:upload_csv' %}">Home <span class="visually-hidden">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'about' %}">About</a>
+            </li>
+            {% if request.user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link"
+                   href="{% url 'users:detail' request.user.username %}">{% translate "My Profile" %}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
+              </li>
+            {% else %}
+              {% if ACCOUNT_ALLOW_REGISTRATION %}
+                <li class="nav-item">
+                  <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
+                </li>
+              {% endif %}
+              <li class="nav-item">
+                <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="container">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-dismissible {{ message.tags }}">
+          {{ message }}
+          <button type="button"
+                  class="btn-close"
+                  data-bs-dismiss="alert"
+                  aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+    {% block content %}
+      <div class="about-us">
+      <img class="sports-league-img" src="{% static 'images/favicons/sports-league.png' %}" alt="Sports League">
+        <div class="box">
+        <h2>Sports League</h2>
+      <p>
+        This is a web application that allows the user to upload a CSV file containing the results of games in
+        the sports league and displays the ranking table based on the uploaded data. The CSV file should have the following format:
+        <strong>team_1 name, team_1 score, team_2 name, team_2 score</strong>. The ranking table will be generated based on the sample
+        output below.
+    </p>
+    <p>
+        The user is able to <strong>add</strong>, <strong>edit</strong>, and <strong>delete</strong> games from the list through the web interface.
+        A draw (tie) is worth <span class="highlight">1 point</span> and a win is worth <span class="highlight">3 points</span>. A loss is worth <span class="highlight">0 points</span>. If two or more teams have the same number of
+        points, they will be ranked based on their points, and teams with the same number of points will be ordered alphabetically.
+    </p>
+        </div>
+      </div>
+    {% endblock content %}
+  </div>
+  <!-- /container -->
+  {% block modal %}
+  {% endblock modal %}
+  {% block inline_javascript %}
+    {% comment %}
+    Script tags with only code, no src (defer by default). To run
+    with a "defer" so that you run inline code:
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        /* Run whatever you want */
+      });
+    </script>
+    {% endcomment %}
+  {% endblock inline_javascript %}
+</body>
+</html>
