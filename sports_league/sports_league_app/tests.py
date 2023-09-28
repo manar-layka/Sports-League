@@ -56,18 +56,19 @@ class UpdateTeamsTestCase(TestCase):
             first_team=self.first_team, first_team_score=2, second_team=self.second_team, second_team_score=1
         )
         self.user = User.objects.create_user(username="test_user", password="test_password")
+        self.auth_user = User.objects.create_user(username="auth_test_user", password="auth_test_password")
 
     def test_login_user(self):
         # test protected url
         response = self.client.get(reverse("sports_league_app:upload_csv"))
         self.assertEqual(response.status_code, 302)
-        self.client.login(username="test_user", password="test_password")
+        self.client.login(username="auth_test_user", password="auth_test_password")
         response = self.client.get(reverse("sports_league_app:upload_csv"))
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context["user"].is_authenticated)
 
     def test_form_valid_with_default_strategy(self):
-        self.test_login_user()
+        self.client.login(username="test_user", password="test_password")
         with patch("sports_league_app.views.DefaultPointsCalculation") as MockDefaultPointsCalculation:
             mock_strategy_instance = MockDefaultPointsCalculation.return_value
             form_data = {"first_team_score": 3, "second_team_score": 1}
@@ -83,7 +84,7 @@ class UpdateTeamsTestCase(TestCase):
             self.assertRedirects(response, reverse("sports_league_app:games_list"))
 
     def test_update_teams(self):
-        self.test_login_user()
+        self.client.login(username="test_user", password="test_password")
         self.default_strategy_instance.update_teams(self.game, delete=False)
         self.first_team.refresh_from_db()
         self.second_team.refresh_from_db()
